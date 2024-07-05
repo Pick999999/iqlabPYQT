@@ -17,17 +17,36 @@ class CandleArray:
         # rawCandle = ตัวแปร array ของข้อมูลดิบทั้งหมด 30 รายการ
         # rawCandleTmp = ตัวแปร ของข้อมูลดิบ 1 รายการ
         # Information = ตัวแปร array ของข้อมูลที่ทำการสร้าง Indy จาก rawCandle แล้ว ทั้งหมด 30 รายการ
+        # Step1  ให้ทำการ ดึงข้อมูล 30 รายการจาก iqoption มาใส่ใน rawCandle
+        # Step2  นำข้อมูล rawCandle ไปสร้าง indy แล้วเก็บไว้ใน Information ซึ่งจะมีทั้งหมด 30 รายการ
+        # Step3  นำข้อมูล Information มาหา action แล้วส่งไป Buy
+        # Step4   เข้่ารอบ เทรดที่ 2,3... 
+        # Step4.1 ดึงข้อมูลจาก iq มา 1 รายการ ใส่ใน tmp 
+        # Step4.2 นำ tmp  ไป append->rawCandle
+        # Step4.3 วนไปที่ Step3
         
         # super(CandleArray, self).__init__(parent)
         self.curpair = curpair
         self.parent = parent  # Save parent
         numcandleFirst = 30 ; numcandleNext = 1
         
-        timeinterval = 60 
-        self.getRawCandleFirst(curpair, timeinterval, numcandleFirst, parent.thistimestamp)
+        self.timeinterval = 60 
+        # self.getRawCandleFirst(curpair, timeinterval, numcandleFirst, parent.thistimestamp)
         # candle = mylib.getCandle(I_want_money, curpair, numcandle,timeserver)
         # self.printCurPair()
     
+    
+    def giverawCandle(self):
+        
+        self.parent.thistimestamp
+        if self.parent.tradeno == 0 :
+           numcandle = 30
+           self.tmpData = self.parent.api.get_candles(self.curpair, self.timeinterval, numcandle,self.parent.thistimestamp)
+        else :
+           numcandle = 1
+           self.tmpData = self.parent.api.get_candles(self.curpair, self.timeinterval, numcandle,self.parent.thistimestamp)
+                        
+        
         
         
         
@@ -56,7 +75,10 @@ class CandleArray:
         
         # Step นี้ สร้างเฉพาะ หมวด macd
         self.createMACD()
-        
+    
+    
+    def createIndy(self) :
+        pass
         
     def createMACD(self) :
         fastperiod = 3 ; slowperiod = 5 ; signalperiod = 4
